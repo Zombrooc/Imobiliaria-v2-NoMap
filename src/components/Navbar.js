@@ -14,7 +14,6 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 const userNavigation = [
   { name: "Seu Perfil", href: "#" },
   { name: "Configurações", href: "#" },
-  { name: "Sair", href: "#"},
 ];
 
 function classNames(...classes) {
@@ -42,10 +41,6 @@ export default function Navbar() {
           photoURL: user.photoURL,
           email: user.email,
         });
-      } else {
-        // User is signed out
-        // ...
-        console.log("user is logged out");
       }
     });
   }, [user]);
@@ -53,64 +48,16 @@ export default function Navbar() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        // Sign-out successful.
         router.push("/");
         console.log("Signed out successfully");
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
   };
 
   return (
     <>
-      {/* <nav className="w-full h-20  p-6 flex flex-row items-center bg-slate-100 border-slate-400 shadow-md z-10">
-        <span className="w-full font-bold text-3xl h-auto flex justify-start items-start text-center ">
-          LOGO
-        </span>
-        <div className=" w-full flex flex-row items-center justify-end">
-          <Link
-            href="/"
-            className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-500 font-medium"
-          >
-            Inicio
-          </Link>
-          <Link
-            href="/"
-            className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-500 font-medium"
-          >
-            Comprar
-          </Link>
-          <Link
-            href="/"
-            className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-500 font-medium"
-          >
-            Vender
-          </Link>
-          <Link
-            href="/"
-            className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-500 font-medium"
-          >
-            Alugar
-          </Link>
-          {!user && (
-            <>
-              <Link
-                href="/auth/signin"
-                className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-200 bg-[--primary] rounded-lg py-3 px-4 mx-1 font-medium"
-              >
-                Entrar
-              </Link>
-              <Link
-                href="/auth/signup"
-                className="w-24 flex justify-center align-center text-base cursor-pointer text-slate-500 font-medium"
-              >
-                Cadastrar-se
-              </Link>
-            </>
-          )}
-        </div>
-      </nav> */}
       <Disclosure as="nav" className="bg-slate-100">
         {({ open }) => (
           <>
@@ -225,6 +172,14 @@ export default function Navbar() {
                                 )}
                               </Menu.Item>
                             ))}
+                            <Menu.Item>
+                              <a
+                                className="block px-4 py-2 text-sm text-gray-700"
+                                onClick={() => handleLogout()}
+                              >
+                                Sair
+                              </a>
+                            </Menu.Item>
                           </Menu.Items>
                         </Transition>
                       </Menu>
