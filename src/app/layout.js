@@ -8,6 +8,7 @@ export const metadata = {
   title: "Imobiliaria",
 };
 
+
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">

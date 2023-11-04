@@ -1,10 +1,40 @@
-import Link from "next/link";
+"use client";
 
-export const metadata = {
-  title: "Entrar - Imobiliária",
-};
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { auth } from "@/lib/firebase";
 
 export default function Signin() {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = ({ email, password }) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+
+        router.push("/");
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+
+        alert(errorCode, errorMessage);
+
+        // ..
+      });
+  };
+
   return (
     <>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -20,7 +50,7 @@ export default function Signin() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
@@ -30,8 +60,7 @@ export default function Signin() {
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
+                  {...register("email", { required: "Digite seu e-mail" })}
                   type="email"
                   autoComplete="email"
                   required
@@ -59,8 +88,7 @@ export default function Signin() {
               </div>
               <div className="mt-2">
                 <input
-                  id="password"
-                  name="password"
+                  {...register("password", { required: "Digite sua senha" })}
                   type="password"
                   autoComplete="current-password"
                   required
