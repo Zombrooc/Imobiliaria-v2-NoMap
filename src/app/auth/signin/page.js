@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
+// import Image from "next/image";
 
 import { auth } from "@/lib/firebase";
 
@@ -44,6 +45,13 @@ export default function Signin() {
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
           />
+          {/* <Image
+            className="mx-auto h-10 w-auto"
+            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+            alt="Your Company"
+            width={80}
+            height={47}
+          /> */}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Entre na sua conta
           </h2>
