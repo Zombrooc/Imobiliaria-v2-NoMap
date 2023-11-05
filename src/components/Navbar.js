@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import Link from "next/link";
+import Image from "next/image";
 
 import { auth } from "@/lib/firebase";
 
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import LoadingSpinner from "./Loading_Spinner";
 
 const userNavigation = [
   { name: "Seu Perfil", href: "#" },
@@ -77,10 +79,12 @@ export default function Navbar() {
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <img
+                    <Image
                       className="h-8 w-auto"
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                       alt="Your Company"
+                      width="32"
+                      height="32"
                     />
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
@@ -123,10 +127,12 @@ export default function Navbar() {
                             <span className="sr-only">
                               Abrir menu do usuário
                             </span>
-                            <img
+                            <Image
                               className="h-8 w-8 rounded-full"
                               src={user.photoURL}
-                              alt=""
+                              alt="User Profile Pic"
+                              width={32}
+                              height={32}
                             />
                           </Menu.Button>
                         </div>
@@ -142,14 +148,16 @@ export default function Navbar() {
                           <Menu.Items className="absolute right-0 z-10 mt-2 w-60 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                             <div className="flex items-center p-3">
                               <div className="flex-shrink-0">
-                                <img
+                                <Image
                                   className="h-10 w-10 rounded-full"
                                   src={user.photoURL}
                                   alt=""
+                                  width={40}
+                                  height={40}
                                 />
                               </div>
                               <div className="ml-3">
-                                <div className="text-xs font-medium leading-none text-slate-400">
+                                <div className="text-base font-medium leading-none text-slate-400">
                                   {user.displayName}
                                 </div>
                                 <div className="text-xs font-medium leading-none text-slate-400">
