@@ -1,6 +1,6 @@
 export default function LoadingSpinner() {
   return (
-    <div className="min-h-screen min-w-screen flex content-center items-center">
+    <div className="min-h-screen min-w-screen flex content-center items-center absolute t-0 l-0">
       <div>
         <svg
           aria-hidden="true"
