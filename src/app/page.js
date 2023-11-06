@@ -13,7 +13,7 @@ export default function Home() {
       {/* <Sidebar /> */}
       <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
         <div className="flex flex-row w-screen min-w-full h-screen min-h-full">
-          <main className="w-full p-10 overflow-y-scroll">
+          <main className="w-full overflow-y-scroll">
             <Suspense fallback={<Loading />}>
               <PropertyList />
             </Suspense>

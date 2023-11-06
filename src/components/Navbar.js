@@ -50,6 +50,7 @@ export default function Navbar() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
+        setUser(null);
         router.push("/");
         console.log("Signed out successfully");
       })
@@ -107,7 +108,7 @@ export default function Navbar() {
                     </div>
                   </div>
                 </div>
-                {user && (
+                {user ? (
                   <>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                       <button
@@ -193,6 +194,23 @@ export default function Navbar() {
                       </Menu>
                     </div>
                   </>
+                ) : (
+                  <>
+                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                      <a
+                        href="/auth/signin"
+                        className="text-slate-500 hover:bg-[--primary] hover:text-white rounded-md px-3 py-2 text-sm font-medium"
+                      >
+                        Entrar
+                      </a>
+                      <a
+                        href="/auth/signup"
+                        className="bg-[--primary] text-white rounded-md px-3 py-2 text-sm font-medium"
+                      >
+                        Cadastrar-se
+                      </a>
+                    </div>
+                  </>
                 )}
               </div>
             </div>
@@ -215,6 +233,24 @@ export default function Navbar() {
                     {item.name}
                   </Disclosure.Button>
                 ))}
+                {!user && (
+                  <>
+                    <Disclosure.Button
+                      as="a"
+                      href="/auth/signin"
+                      className="text-slate-500 hover:bg-[--primary] hover:text-white block rounded-md px-3 py-2 text-base font-medium"
+                    >
+                      Entrar
+                    </Disclosure.Button>
+                    <Disclosure.Button
+                      as="a"
+                      href="/auth/signup"
+                      className="bg-[--primary] text-slate-100 block rounded-md px-3 py-2 text-base font-medium"
+                    >
+                      Registrar-se
+                    </Disclosure.Button>
+                  </>
+                )}
               </div>
             </Disclosure.Panel>
           </>
