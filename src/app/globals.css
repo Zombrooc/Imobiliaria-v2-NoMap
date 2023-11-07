@@ -4,6 +4,8 @@
 
 :root {
   --primary: #0284c7;
+  --black: #373435;
+  --white: #fff;
 }
 
 @layer base {
