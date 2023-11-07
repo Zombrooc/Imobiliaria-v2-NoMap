@@ -111,15 +111,6 @@ export default function Navbar() {
                 {user ? (
                   <>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                      {/* <button
-                        type="button"
-                        className="relative rounded-full bg-slate-100 p-1 text-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">Notificações</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button> */}
-
                       <Menu as="div" className="relative ml-3">
                         <div>
                           <Menu.Button className="relative flex rounded-full bg-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -145,15 +136,17 @@ export default function Navbar() {
                             </div>
                             <div>
                               <Menu.Item>
-                                <a
+                                <Link
                                   href="#"
                                   className="flex py-3 px-4 border-b hover:bg-gray-100 "
                                 >
                                   <div className="flex-shrink-0">
-                                    <img
+                                    <Image
                                       className="w-11 h-11 rounded-full"
                                       src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
                                       alt="Bonnie Green avatar"
+                                      width={44}
+                                      height={44}
                                     />
                                     <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 dark:border-gray-700">
                                       <svg
@@ -177,168 +170,16 @@ export default function Navbar() {
                                       : Hey, whats up? All set for the
                                       presentation?
                                     </div>
-                                    <div className="text-xs font-medium text-primary-700">
+                                    <div className="text-xs font-medium text-[--black]">
                                       a few moments ago
                                     </div>
                                   </div>
-                                </a>
+                                </Link>
                               </Menu.Item>
-
-                              {/* <a
-                                  href="#"
-                                  className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-                                >
-                                  <div className="flex-shrink-0">
-                                    <img
-                                      className="w-11 h-11 rounded-full"
-                                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/jese-leos.png"
-                                      alt="Jese Leos avatar"
-                                    />
-                                    <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-gray-900 rounded-full border border-white dark:border-gray-700">
-                                      <svg
-                                        className="w-2 h-2 text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 18"
-                                      >
-                                        <path d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z" />
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div className="pl-3 w-full">
-                                    <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                                      <span className="font-semibold text-gray-900 dark:text-white">
-                                        Jese leos
-                                      </span>{" "}
-                                      and{" "}
-                                      <span className="font-medium text-gray-900 dark:text-white">
-                                        5 others
-                                      </span>{" "}
-                                      started following you.
-                                    </div>
-                                    <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
-                                      10 minutes ago
-                                    </div>
-                                  </div>
-                                </a>
-                                <a
-                                  href="#"
-                                  className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-                                >
-                                  <div className="flex-shrink-0">
-                                    <img
-                                      className="w-11 h-11 rounded-full"
-                                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/joseph-mcfall.png"
-                                      alt="Joseph McFall avatar"
-                                    />
-                                    <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-red-600 rounded-full border border-white dark:border-gray-700">
-                                      <svg
-                                        className="w-2 h-2 text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 18"
-                                      >
-                                        {" "}
-                                        <path d="M17.947 2.053a5.209 5.209 0 0 0-3.793-1.53A6.414 6.414 0 0 0 10 2.311 6.482 6.482 0 0 0 5.824.5a5.2 5.2 0 0 0-3.8 1.521c-1.915 1.916-2.315 5.392.625 8.333l7 7a.5.5 0 0 0 .708 0l7-7a6.6 6.6 0 0 0 2.123-4.508 5.179 5.179 0 0 0-1.533-3.793Z" />{" "}
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div className="pl-3 w-full">
-                                    <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                                      <span className="font-semibold text-gray-900 dark:text-white">
-                                        Joseph Mcfall
-                                      </span>{" "}
-                                      and{" "}
-                                      <span className="font-medium text-gray-900 dark:text-white">
-                                        141 others
-                                      </span>{" "}
-                                      love your story. See it and view more
-                                      stories.
-                                    </div>
-                                    <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
-                                      44 minutes ago
-                                    </div>
-                                  </div>
-                                </a>
-                                <a
-                                  href="#"
-                                  className="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600"
-                                >
-                                  <div className="flex-shrink-0">
-                                    <img
-                                      className="w-11 h-11 rounded-full"
-                                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/roberta-casas.png"
-                                      alt="Roberta Casas image"
-                                    />
-                                    <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-green-400 rounded-full border border-white dark:border-gray-700">
-                                      <svg
-                                        className="w-2 h-2 text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 18"
-                                      >
-                                        <path d="M18 0H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2v4a1 1 0 0 0 1.707.707L10.414 13H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5 4h2a1 1 0 1 1 0 2h-2a1 1 0 1 1 0-2ZM5 4h5a1 1 0 1 1 0 2H5a1 1 0 0 1 0-2Zm2 5H5a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Zm9 0h-6a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z" />
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div className="pl-3 w-full">
-                                    <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                                      <span className="font-semibold text-gray-900 dark:text-white">
-                                        Leslie Livingston
-                                      </span>{" "}
-                                      mentioned you in a comment:{" "}
-                                      <span className="font-medium text-primary-700 dark:text-primary-500">
-                                        @bonnie.green
-                                      </span>{" "}
-                                      what do you say?
-                                    </div>
-                                    <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
-                                      1 hour ago
-                                    </div>
-                                  </div>
-                                </a>
-                                <a
-                                  href="#"
-                                  className="flex py-3 px-4 hover:bg-gray-100 dark:hover:bg-gray-600"
-                                >
-                                  <div className="flex-shrink-0">
-                                    <img
-                                      className="w-11 h-11 rounded-full"
-                                      src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/robert-brown.png"
-                                      alt="Robert image"
-                                    />
-                                    <div className="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 bg-purple-500 rounded-full border border-white dark:border-gray-700">
-                                      <svg
-                                        className="w-2 h-2 text-white"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 14"
-                                      >
-                                        <path d="M11 0H2a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm8.585 1.189a.994.994 0 0 0-.9-.138l-2.965.983a1 1 0 0 0-.685.949v8a1 1 0 0 0 .675.946l2.965 1.02a1.013 1.013 0 0 0 1.032-.242A1 1 0 0 0 20 12V2a1 1 0 0 0-.415-.811Z" />
-                                      </svg>
-                                    </div>
-                                  </div>
-                                  <div className="pl-3 w-full">
-                                    <div className="text-gray-500 font-normal text-sm mb-1.5 ">
-                                      <span className="font-semibold text-gray-900 dark:text-white">
-                                        Robert Brown
-                                      </span>{" "}
-                                      posted a new video: Glassmorphism - learn
-                                      how to implement the new design trend.
-                                    </div>
-                                    <div className="text-xs font-medium text-primary-700 dark:text-primary-400">
-                                      3 hours ago
-                                    </div>
-                                  </div>
-                                </a> */}
                             </div>
                             <a
                               href="#"
-                              className="block py-2 text-base font-medium text-center text-gray-900 bg-gray-50 hover:bg-gray-100  dark:text-white dark:hover:underline"
+                              className="block py-2 text-base font-medium text-center text-[--black] bg-gray-50 hover:bg-gray-100  "
                             >
                               <div className="inline-flex items-center ">
                                 <svg
@@ -355,7 +196,7 @@ export default function Navbar() {
                                     clip-rule="evenodd"
                                   ></path>
                                 </svg>
-                                View all
+                                Ver todas
                               </div>
                             </a>
                           </Menu.Items>
@@ -425,7 +266,7 @@ export default function Navbar() {
                             ))}
                             <Menu.Item>
                               <a
-                                className="block px-4 py-2 text-sm text-[--black]"
+                                className="block px-4 py-2 text-sm text-[--black] cursor-pointer"
                                 onClick={() => handleLogout()}
                               >
                                 Sair
@@ -437,8 +278,8 @@ export default function Navbar() {
                     </div>
                   </>
                 ) : (
-                  <>
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                  <div className="hidden sm:ml-6 sm:block">
+                    <div className="absolute inset-y-0 right-0 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 flex space-x-4">
                       <a
                         href="/auth/signin"
                         className="text-slate-500 hover:bg-[--primary] hover:text-white rounded-md px-3 py-2 text-sm font-medium"
@@ -452,7 +293,7 @@ export default function Navbar() {
                         Cadastrar-se
                       </a>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             </div>

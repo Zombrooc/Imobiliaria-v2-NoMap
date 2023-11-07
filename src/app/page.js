@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <Navbar />
       {/* <Sidebar /> */}
-      <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-full py-6 sm:px-6 lg:px-8">
         <div className="flex flex-row w-screen min-w-full h-screen min-h-full">
           <main className="w-full overflow-y-scroll">
             <Suspense fallback={<Loading />}>
