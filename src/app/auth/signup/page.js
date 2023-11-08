@@ -1,17 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
-import {
-  ref,
-  uploadBytes,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
@@ -23,8 +19,6 @@ export default function Signin() {
 
   const [uploadProgress, setUploadProgress] = useState(null);
 
-  const [downloadURL, setDownloadURL] = useState(null);
-
   const {
     register,
     handleSubmit,
@@ -32,75 +26,86 @@ export default function Signin() {
     formState: { errors },
   } = useForm();
 
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push('/')
+      }
+    });
+  }, [router]);
+
   const onSubmit = async ({ username, email, password, profileImage }) => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const user = auth.currentUser;
-
-        // Get the file
-        const file = profileImage[0];
-        const extension = file.type.split("/")[1];
-
-        console.log(file);
-
-        // Makes reference to the storage bucket location
-        const uploadRef = ref(
-          storage,
-          `uploads/${user.uid}/${Date.now()}.${extension}`
-        );
-
-        // Starts the upload
-        const uploadTask = uploadBytesResumable(uploadRef, file);
-
-        // Listen to updates to upload task
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const pct = (
-              (snapshot.bytesTransferred / snapshot.totalBytes) *
-              100
-            ).toFixed(0);
-            setUploadProgress(pct);
-          },
-          (error) => {
-            switch (error.code) {
-              case "storage/unauthorized":
-                alert("Não autorizado!");
-                break;
-              case "storage/canceled":
-                alert("Upload cancelado!");
-                break;
-
-              case "storage/unknown":
-                alert("Erro desconhecido!");
-                break;
-            }
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              setDownloadURL(url);
-              console.log(downloadURL);
-            });
-          }
-        );
 
         sendEmailVerification(user).then(() => {
           console.log("Email de verificação enviado!");
         });
-
         updateProfile(user, {
           displayName: username,
-          photoURL: downloadURL,
         })
           .then(() => {
-            setUploadProgress(null);
-            setDownloadURL(null);
-            router.push("/?createUser=success");
+            router.push("/?signup=success");
           })
           .catch((error) => {
             alert(error);
           });
+
+        if (profileImage) {
+          const file = profileImage[0];
+
+          const extension = file.type.split("/")[1];
+
+          // Makes reference to the storage bucket location
+          const uploadRef = ref(
+            storage,
+            `uploads/${user.uid}/${Date.now()}.${extension}`
+          );
+
+          // Starts the upload
+          const uploadTask = uploadBytesResumable(uploadRef, file);
+
+          // Listen to updates to upload task
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const pct = (
+                (snapshot.bytesTransferred / snapshot.totalBytes) *
+                100
+              ).toFixed(0);
+              setUploadProgress(pct);
+            },
+            (error) => {
+              switch (error.code) {
+                case "storage/unauthorized":
+                  alert("Não autorizado!");
+                  break;
+                case "storage/canceled":
+                  alert("Upload cancelado!");
+                  break;
+
+                case "storage/unknown":
+                  alert("Erro desconhecido!");
+                  break;
+              }
+            },
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                updateProfile(user, {
+                  photoURL: url,
+                })
+                  .then(() => {
+                    console.log("Image upload success");
+                  })
+                  .catch((error) => {
+                    alert(error);
+                  });
+              });
+            }
+          );
+        }
       })
       .catch((error) => {
         const errorCode = error.code;

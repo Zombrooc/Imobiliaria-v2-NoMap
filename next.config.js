@@ -27,6 +27,11 @@ const nextConfig = {
         hostname: "**.amazonaws.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "**",
+      },
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",

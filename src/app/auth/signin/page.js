@@ -1,10 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useEffect } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { signInWithEmailAndPassword } from "firebase/auth";
-// import Image from "next/image";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
 
@@ -16,6 +15,14 @@ export default function Signin() {
     watch,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/");
+      }
+    });
+  }, [router]);
 
   const onSubmit = ({ email, password }) => {
     signInWithEmailAndPassword(auth, email, password)

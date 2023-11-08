@@ -13,6 +13,8 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import LoadingSpinner from "./Loading_Spinner";
 
+import ProfilePic from "@/assets/user-default-profile-pic.jpg";
+
 const userNavigation = [
   { name: "Seu Perfil", href: "#" },
   { name: "Configurações", href: "#" },
@@ -214,7 +216,7 @@ export default function Navbar() {
                             </span>
                             <Image
                               className="h-8 w-8 rounded-full"
-                              src={user?.photoURL}
+                              src={user.photoURL || ProfilePic}
                               alt="User Profile Pic"
                               width={32}
                               height={32}
@@ -235,7 +237,7 @@ export default function Navbar() {
                               <div className="flex-shrink-0">
                                 <Image
                                   className="h-10 w-10 rounded-full"
-                                  src={user?.photoURL}
+                                  src={user.photoURL || ProfilePic}
                                   alt=""
                                   width={40}
                                   height={40}
