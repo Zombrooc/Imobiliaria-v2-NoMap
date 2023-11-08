@@ -3,7 +3,7 @@ import PropertyItem from "@/components/PropertyItem";
 export default function PropertyList() {
   return (
     // <div className="rounded-xl shadow-md p-14 bg-slate-100">
-    <div className="w-auto rounded-xl shadow-md p-8 bg-slate-100">
+    <div className=" rounded-xl shadow-md p-8 bg-slate-100">
       <h1 className="text-2xl font-bold">
         {" "}
         Conheça alguns dos nossos imóveis{" "}

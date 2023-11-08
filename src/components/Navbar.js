@@ -266,7 +266,7 @@ export default function Navbar() {
                             ))}
                             <Menu.Item>
                               <a
-                                className="block px-4 py-2 text-sm text-[--black] cursor-pointer"
+                                className="block px-4 py-2 text-sm text-[--black] cursor-pointer hover:bg-gray-100"
                                 onClick={() => handleLogout()}
                               >
                                 Sair

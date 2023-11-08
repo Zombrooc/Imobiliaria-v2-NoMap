@@ -6,6 +6,7 @@ import {
   updateProfile,
 } from "firebase/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 
 import { auth } from "@/lib/firebase";
@@ -56,10 +57,12 @@ export default function Signin() {
     <>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
+          <Image
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
+            width={"auto"}
+            height={"auto"}
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Criar uma conta
@@ -68,6 +71,23 @@ export default function Signin() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <div>
+              <label
+                className="block mb-2 text-sm font-medium text-gray-900 "
+                htmlFor="file_input"
+              >
+                Foto de Perfil
+              </label>
+              <input
+                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 "
+                aria-describedby="file_input_help"
+                id="file_input"
+                type="file"
+              />
+              <p className="mt-1 text-sm text-gray-500 " id="file_input_help">
+                PNG, JPG or GIF (MAX. 800x800px).
+              </p>
+            </div>
             <div>
               <label
                 htmlFor="username"
@@ -82,6 +102,11 @@ export default function Signin() {
                   {...register("username", { required: "Digite seu nome" })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[--primary] sm:text-sm sm:leading-6"
                 />
+                {errors.message && (
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    {errors.message}
+                  </p>
+                )}
               </div>
             </div>
             <div>

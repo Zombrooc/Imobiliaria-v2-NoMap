@@ -12,9 +12,4 @@
   * {
     @apply box-border;
   }
-
-  html,
-  body {
-    @apply overflow-hidden;
-  }
 }

@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function PropertyItem({ img }) {
   return (
     <>
-      <div className="w-56 rounded-xl shadow-md overflow-hidden m-5">
+      <div className="w-52 rounded-xl shadow-md m-5 overflow-hidden">
         <Image
           src={img}
           alt="Picture of the author"
@@ -11,7 +11,7 @@ export default function PropertyItem({ img }) {
           width={224}
           height={140}
         />
-        <div className="p-4 font-sm font-medium text-gray-400">
+        <div className="p-3 text-xs font-medium text-gray-400">
           <div className=" flex content-justify pt-1">
             <div className="w-full">
               <span> Quartos: 2 </span>
@@ -34,7 +34,7 @@ export default function PropertyItem({ img }) {
         </div>
         <a
           type="button"
-          className="w-full h-full p-3 text-center text-lg font-medium bg-[--primary] text-neutral-200 cursor-pointer"
+          className="w-full p-3 text-center text-lg font-medium bg-[--primary] text-neutral-200 cursor-pointer"
         >
           {" "}
           Saiba mais
