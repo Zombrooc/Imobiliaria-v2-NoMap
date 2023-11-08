@@ -1,18 +1,29 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   updateProfile,
 } from "firebase/auth";
+import {
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import Link from "next/link";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 
-import { auth } from "@/lib/firebase";
+import { auth, storage } from "@/lib/firebase";
 
 export default function Signin() {
   const router = useRouter();
+
+  const [uploadProgress, setUploadProgress] = useState(null);
+
+  const [downloadURL, setDownloadURL] = useState(null);
 
   const {
     register,
@@ -21,12 +32,58 @@ export default function Signin() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = ({ username, email, password }) => {
-    console.log(username, email, password);
+  const onSubmit = async ({ username, email, password, profileImage }) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = auth.currentUser;
+
+        // Get the file
+        const file = profileImage[0];
+        const extension = file.type.split("/")[1];
+
+        console.log(file);
+
+        // Makes reference to the storage bucket location
+        const uploadRef = ref(
+          storage,
+          `uploads/${user.uid}/${Date.now()}.${extension}`
+        );
+
+        // Starts the upload
+        const uploadTask = uploadBytesResumable(uploadRef, file);
+
+        // Listen to updates to upload task
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const pct = (
+              (snapshot.bytesTransferred / snapshot.totalBytes) *
+              100
+            ).toFixed(0);
+            setUploadProgress(pct);
+          },
+          (error) => {
+            switch (error.code) {
+              case "storage/unauthorized":
+                alert("Não autorizado!");
+                break;
+              case "storage/canceled":
+                alert("Upload cancelado!");
+                break;
+
+              case "storage/unknown":
+                alert("Erro desconhecido!");
+                break;
+            }
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+              setDownloadURL(url);
+              console.log(downloadURL);
+            });
+          }
+        );
 
         sendEmailVerification(user).then(() => {
           console.log("Email de verificação enviado!");
@@ -34,12 +91,12 @@ export default function Signin() {
 
         updateProfile(user, {
           displayName: username,
-          photoURL:
-            "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+          photoURL: downloadURL,
         })
           .then(() => {
-            alert("Sucesso");
-            router.push("/");
+            setUploadProgress(null);
+            setDownloadURL(null);
+            router.push("/?createUser=success");
           })
           .catch((error) => {
             alert(error);
@@ -57,12 +114,10 @@ export default function Signin() {
     <>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <Image
+          <img
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
-            width={"auto"}
-            height={"auto"}
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Criar uma conta
@@ -73,18 +128,18 @@ export default function Signin() {
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
-                className="block mb-2 text-sm font-medium text-gray-900 "
-                htmlFor="file_input"
+                htmlFor="image"
+                className="block text-sm font-medium leading-6 text-gray-900 "
               >
                 Foto de Perfil
               </label>
+
               <input
-                className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 "
-                aria-describedby="file_input_help"
-                id="file_input"
                 type="file"
+                className="block w-full px-3 py-2 mt-2 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none file:rounded-full  placeholder-gray-400/70  focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 "
+                {...register("profileImage")}
               />
-              <p className="mt-1 text-sm text-gray-500 " id="file_input_help">
+              <p className="mt-1 text-xs text-gray-500 " id="file_input_help">
                 PNG, JPG or GIF (MAX. 800x800px).
               </p>
             </div>

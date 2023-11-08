@@ -38,9 +38,10 @@ export default function Navbar() {
       if (user) {
         // User is signed in, see docs for a list of available properties
         // https://firebase.google.com/docs/reference/js/firebase.User
+        console.log(user);
         setUser({
           displayName: user.displayName,
-          photoURL: user.photoURL,
+          photoURL: user?.photoURL,
           email: user.email,
         });
       }
@@ -213,7 +214,7 @@ export default function Navbar() {
                             </span>
                             <Image
                               className="h-8 w-8 rounded-full"
-                              src={user.photoURL}
+                              src={user?.photoURL}
                               alt="User Profile Pic"
                               width={32}
                               height={32}
@@ -234,7 +235,7 @@ export default function Navbar() {
                               <div className="flex-shrink-0">
                                 <Image
                                   className="h-10 w-10 rounded-full"
-                                  src={user.photoURL}
+                                  src={user?.photoURL}
                                   alt=""
                                   width={40}
                                   height={40}
