@@ -1,7 +1,9 @@
 "use client";
 
-import { useRouter, useEffect } from "next/navigation";
+import { useLayoutEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 
@@ -16,7 +18,7 @@ export default function Signin() {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         router.push("/");
@@ -47,18 +49,13 @@ export default function Signin() {
     <>
       <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
-            className="mx-auto h-10 w-auto"
-            src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-            alt="Your Company"
-          />
-          {/* <Image
+          <Image
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
             width={80}
             height={47}
-          /> */}
+          />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Entre na sua conta
           </h2>

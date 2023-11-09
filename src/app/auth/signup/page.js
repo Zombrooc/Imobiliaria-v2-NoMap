@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   createUserWithEmailAndPassword,
@@ -26,10 +26,10 @@ export default function Signin() {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        router.push('/')
+        router.push("/");
       }
     });
   }, [router]);
