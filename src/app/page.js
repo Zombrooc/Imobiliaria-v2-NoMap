@@ -18,6 +18,26 @@ export default function Home() {
     formState: { errors },
   } = useForm();
 
+  const onSubmit = ({ price, propertyArea, rooms, propertyDestination }) => {
+    console.log(price, propertyArea, rooms, propertyDestination);
+    // signInWithEmailAndPassword(auth, email, password)
+    //   .then((userCredential) => {
+    //     // Signed in
+    //     const user = userCredential.user;
+
+    //     router.push("/");
+    //     // ...
+    //   })
+    //   .catch((error) => {
+    //     const errorCode = error.code;
+    //     const errorMessage = error.message;
+
+    //     alert(errorCode, errorMessage);
+
+    //     // ..
+    //   });
+  };
+
   return (
     <>
       <Navbar />
@@ -67,13 +87,13 @@ export default function Home() {
                           Criar novo imóvel
                           <button
                             type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                             data-modal-toggle="defaultModal"
                             onClick={() => setCreatePropertyModal(false)}
                           >
                             <svg
                               aria-hidden="true"
-                              class="w-5 h-5"
+                              className="w-5 h-5"
                               fill="currentColor"
                               viewBox="0 0 20 20"
                               xmlns="http://www.w3.org/2000/svg"
@@ -84,12 +104,34 @@ export default function Home() {
                                 clip-rule="evenodd"
                               ></path>
                             </svg>
-                            <span class="sr-only">Close modal</span>
+                            <span className="sr-only">Close modal</span>
                           </button>
                         </Dialog.Title>
                         <div className="mt-2">
-                          <form action="#">
+                          <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="grid gap-4 mb-4 sm:grid-cols-2">
+                              <div className="sm:col-span-2">
+                                <label
+                                  htmlFor="image"
+                                  className="block mb-2 text-sm font-medium text-gray-900  "
+                                >
+                                  Fotos do imóvel
+                                </label>
+
+                                <input
+                                  type="file"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2"
+                                  {...register("propertyImages")}
+                                  multiple
+                                  accept="image/png, image/jpeg, image/gif"
+                                />
+                                <span
+                                  className="mt-1 text-xs text-gray-500 "
+                                  id="file_input_help"
+                                >
+                                  PNG, JPG or GIF (MAX. 800x800px).
+                                </span>
+                              </div>
                               <div>
                                 <label
                                   htmlFor="name"
@@ -109,16 +151,21 @@ export default function Home() {
                               </div>
                               <div>
                                 <label
-                                  htmlFor="brand"
+                                  htmlFor="propertyArea"
                                   className="block mb-2 text-sm font-medium text-gray-900 "
-                                ></label>
+                                >
+                                  {" "}
+                                  Área
+                                </label>
                                 <input
-                                  type="text"
-                                  name="brand"
-                                  id="brand"
+                                  type="number"
+                                  name="propertyArea"
+                                  {...register("propertyArea", {
+                                    required:
+                                      "Digite o tamanho da proprieda (m²)",
+                                  })}
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2.5 "
-                                  placeholder="Product brand"
-                                  required=""
+                                  placeholder="200m²"
                                 />
                               </div>
                               <div>
@@ -130,6 +177,7 @@ export default function Home() {
                                 </label>
                                 <input
                                   type="number"
+                                  name="price"
                                   {...register("price", {
                                     required: "Digite o valor do imóvel",
                                   })}
@@ -151,15 +199,13 @@ export default function Home() {
                                   })}
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 "
                                 >
-                                  <option selected="">
-                                    Escolha um destino
-                                  </option>
+                                  <option selected>Escolha um destino</option>
                                   <option value="rent">Locação</option>
                                   <option value="sell">Venda</option>
                                   <option value="auction">Leilão</option>
                                 </select>
                               </div>
-                              <div className="sm:col-span-2">
+                              {/* <div className="sm:col-span-2">
                                 <label
                                   htmlFor="description"
                                   className="block mb-2 text-sm font-medium text-gray-900 "
@@ -172,11 +218,27 @@ export default function Home() {
                                   className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 "
                                   placeholder="Write product description here"
                                 ></textarea>
+                              </div> */}
+                              <div>
+                                <div className="flex items-center">
+                                  <input
+                                    id="checked-checkbox"
+                                    type="checkbox"
+                                    value=""
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "
+                                  />
+                                  <label
+                                    for="checked-checkbox"
+                                    className="ml-2 text-sm font-medium text-gray-900 "
+                                  >
+                                    Favoritar
+                                  </label>
+                                </div>
                               </div>
                             </div>
                             <button
                               type="submit"
-                              className="text-white inline-flex items-center bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-[--primary] dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                              className="text-white inline-flex items-center bg-[--primary] hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                             >
                               <svg
                                 className="mr-1 -ml-1 w-6 h-6"
