@@ -7,9 +7,11 @@ import { useForm } from "react-hook-form";
 import Loading from "@/app/loading";
 import Navbar from "@/components/Navbar";
 import PropertyList from "@/components/PropertyList";
+// import Banner from "@/components/Banner";
 
 export default function Home() {
   const [createPropertyModal, setCreatePropertyModal] = useState(false);
+  // const [succededSignup, setSuccededSignup] = useState(true);
   const cancelButtonRef = useRef(null);
   const {
     register,
@@ -18,8 +20,30 @@ export default function Home() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = ({ price, propertyArea, rooms, propertyDestination }) => {
-    console.log(price, propertyArea, rooms, propertyDestination);
+  // const searchParams = useSearchParams();
+
+  // useEffect(() => {
+  //   const search = searchParams.get("signup");
+
+  //   search === "success" ? setSuccededSignup(true) : setSuccededSignup(true);
+  // });
+
+  const onSubmit = ({
+    price,
+    propertyArea,
+    rooms,
+    propertyDestination,
+    isFavorite,
+    propertyImages,
+  }) => {
+    console.log(
+      price,
+      propertyArea,
+      rooms,
+      propertyDestination,
+      isFavorite,
+      propertyImages
+    );
     // signInWithEmailAndPassword(auth, email, password)
     //   .then((userCredential) => {
     //     // Signed in
@@ -41,6 +65,14 @@ export default function Home() {
   return (
     <>
       <Navbar />
+      {/* {succededSignup && (
+        <Banner>
+          {" "}
+          <strong> Parabéns!! </strong> Sua conta foi criada com sucesso! Acesse
+          a caixa de entrada do seu e-mail para confirmar a criação da sua
+          conta.
+        </Banner>
+      )} */}
       <main className="w-full p-6">
         <Suspense fallback={<Loading />}>
           <PropertyList />
@@ -112,7 +144,7 @@ export default function Home() {
                             <div className="grid gap-4 mb-4 sm:grid-cols-2">
                               <div className="sm:col-span-2">
                                 <label
-                                  htmlFor="image"
+                                  htmlFor="propertyImages"
                                   className="block mb-2 text-sm font-medium text-gray-900  "
                                 >
                                   Fotos do imóvel
@@ -120,6 +152,7 @@ export default function Home() {
 
                                 <input
                                   type="file"
+                                  name="propertyImages"
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2"
                                   {...register("propertyImages")}
                                   multiple
@@ -194,13 +227,14 @@ export default function Home() {
                                 </label>
                                 <select
                                   {...register("propertyDestination", {
-                                    reqiured:
+                                    required:
                                       "Necessário escolher um destino para esse imóvel.",
                                   })}
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 "
                                 >
-                                  <option selected>Escolha um destino</option>
-                                  <option value="rent">Locação</option>
+                                  <option defaultValue value="rent">
+                                    Locação
+                                  </option>
                                   <option value="sell">Venda</option>
                                   <option value="auction">Leilão</option>
                                 </select>
@@ -222,13 +256,13 @@ export default function Home() {
                               <div>
                                 <div className="flex items-center">
                                   <input
-                                    id="checked-checkbox"
+                                    name="isFavorite"
                                     type="checkbox"
-                                    value=""
+                                    {...register("isFavorite")}
                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "
                                   />
                                   <label
-                                    for="checked-checkbox"
+                                    htmlFor="isFavorite"
                                     className="ml-2 text-sm font-medium text-gray-900 "
                                   >
                                     Favoritar
@@ -252,7 +286,7 @@ export default function Home() {
                                   clip-rule="evenodd"
                                 ></path>
                               </svg>
-                              Add new product
+                              Adicionar Imóvel
                             </button>
                           </form>
                         </div>
