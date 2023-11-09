@@ -35,84 +35,69 @@ export default function Signin() {
   }, [router]);
 
   const onSubmit = async ({ username, email, password, profileImage }) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async (userCredential) => {
-        // Signed in
-        const user = auth.currentUser;
+    const userCredencial = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-        sendEmailVerification(user).then(() => {
-          console.log("Email de verificação enviado!");
-        });
-        updateProfile(user, {
-          displayName: username,
-        })
-          .then(() => {
-            router.push("/?signup=success");
-          })
-          .catch((error) => {
-            alert(error);
-          });
+    const user = auth.currentUser;
 
-        if (profileImage) {
-          const file = profileImage[0];
+    await sendEmailVerification(user);
+    await updateProfile(user, {
+      displayName: username,
+    });
 
-          const extension = file.type.split("/")[1];
+    if (profileImage) {
+      const file = profileImage[0];
 
-          // Makes reference to the storage bucket location
-          const uploadRef = ref(
-            storage,
-            `uploads/${user.uid}/${Date.now()}.${extension}`
-          );
+      const extension = file.type.split("/")[1];
 
-          // Starts the upload
-          const uploadTask = uploadBytesResumable(uploadRef, file);
+      const uploadRef = ref(
+        storage,
+        `uploads/${user.uid}/${Date.now()}.${extension}`
+      );
 
-          // Listen to updates to upload task
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const pct = (
-                (snapshot.bytesTransferred / snapshot.totalBytes) *
-                100
-              ).toFixed(0);
-              setUploadProgress(pct);
-            },
-            (error) => {
-              switch (error.code) {
-                case "storage/unauthorized":
-                  alert("Não autorizado!");
-                  break;
-                case "storage/canceled":
-                  alert("Upload cancelado!");
-                  break;
+      const uploadTask = await uploadBytesResumable(uploadRef, file).on(
+        "state_changed",
+        (snapshot) => {
+          const pct = (
+            (snapshot.bytesTransferred / snapshot.totalBytes) *
+            100
+          ).toFixed(0);
+          setUploadProgress(pct);
+        },
+        (error) => {
+          switch (error.code) {
+            case "storage/unauthorized":
+              alert("Não autorizado!");
+              break;
+            case "storage/canceled":
+              alert("Upload cancelado!");
+              break;
 
-                case "storage/unknown":
-                  alert("Erro desconhecido!");
-                  break;
-              }
-            },
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                updateProfile(user, {
-                  photoURL: url,
-                })
-                  .then(() => {
-                    console.log("Image upload success");
-                  })
-                  .catch((error) => {
-                    alert(error);
-                  });
+            case "storage/unknown":
+              alert("Erro desconhecido!");
+              break;
+          }
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            updateProfile(user, {
+              photoURL: url,
+            })
+              .then(() => {
+                console.log("Image upload success");
+              })
+              .catch((error) => {
+                alert(error);
               });
-            }
-          );
+          });
         }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+      );
+    }
 
-        console.log(error);
-      });
+    router.push("/?signup=success");
   };
 
   return (
@@ -123,7 +108,7 @@ export default function Signin() {
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"
-            width="auto"
+            width={50}
             height={40}
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
