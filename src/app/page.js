@@ -3,14 +3,18 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, Suspense, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
 
 import Loading from "@/app/loading";
 import Navbar from "@/components/Navbar";
 import PropertyList from "@/components/PropertyList";
+import { auth, storage } from "../lib/firebase";
 // import Banner from "@/components/Banner";
 
 export default function Home() {
   const [createPropertyModal, setCreatePropertyModal] = useState(false);
+  const [downloadURLs, setDownloadURLs] = useState([]);
   // const [succededSignup, setSuccededSignup] = useState(true);
   const cancelButtonRef = useRef(null);
   const {
@@ -28,7 +32,7 @@ export default function Home() {
   //   search === "success" ? setSuccededSignup(true) : setSuccededSignup(true);
   // });
 
-  const onSubmit = ({
+  const onSubmit = async ({
     price,
     propertyArea,
     rooms,
@@ -44,22 +48,66 @@ export default function Home() {
       isFavorite,
       propertyImages
     );
-    // signInWithEmailAndPassword(auth, email, password)
-    //   .then((userCredential) => {
-    //     // Signed in
-    //     const user = userCredential.user;
 
-    //     router.push("/");
-    //     // ...
-    //   })
-    //   .catch((error) => {
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
+    let imgURLs = [];
+    const promises = [];
+    Array.from(propertyImages).map(async propertyImage => {
+      // Upload file and metadata to the object 'images/mountains.jpg'
+      const storageRef = ref(storage, 'uploads/' + propertyImage.name);
+      const uploadTask = uploadBytesResumable(storageRef, propertyImage);
 
-    //     alert(errorCode, errorMessage);
 
-    //     // ..
-    //   });
+      // Listen for state changes, errors, and completion of the upload.
+      promises.push(uploadTask);
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+          }
+        },
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          switch (error.code) {
+            case 'storage/unauthorized':
+              // User doesn't have permission to access the object
+              break;
+            case 'storage/canceled':
+              // User canceled the upload
+              break;
+
+            // ...
+
+            case 'storage/unknown':
+              // Unknown error occurred, inspect error.serverResponse
+              break;
+          }
+        },
+        uploadTask.then(() => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setDownloadURLs([...downloadURLs, downloadURL]);
+
+          });
+        }));
+
+
+
+    })
+
+    Promise.all(promises)
+      .then((result) => {
+        console.log("Beginning Upload...", result);
+      })
+      .catch(err => console.log(err.code))
   };
 
   return (

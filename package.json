@@ -13,12 +13,14 @@
     "@heroicons/react": "^2.0.18",
     "firebase": "^10.5.2",
     "firebase-admin": "^11.11.0",
+    "global": "^4.4.0",
     "next": "14.0.1",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
-    "sharp": "^0.32.6"
+    "sharp": "^0.32.6",
+    "vercel": "32.6.1"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.6",
