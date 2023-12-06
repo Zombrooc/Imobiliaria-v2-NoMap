@@ -41,12 +41,13 @@ export default function Home() {
   }) => {
 
     const promises = [];
+    let imageURLs = [];
+
     Array.from(propertyImages).map(async propertyImage => {
 
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
       const uploadTask = uploadBytesResumable(storageRef, propertyImage);
 
-      let imageURLs = [];
       promises.push(uploadTask);
       uploadTask.on('state_changed',
         (snapshot) => {
@@ -79,21 +80,29 @@ export default function Home() {
               // Unknown error occurred, inspect error.serverResponse
               break;
           }
-        },
-        () => {
-          // Upload completed successfully, now we can get the download URL
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            imageURLs.push(downloadURL);
-            console.log(downloadURL)
-          });
         }
       );
     })
 
     Promise.all(promises)
-      .then(async (result) => {
-        console.log(imageURLs)
-        console.log('Result' + result)
+      .then(async (uploadTasks) => {
+
+
+        // () => {
+        //   // Upload completed successfully, now we can get the download URL
+        //   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        //     imageURLs.push(downloadURL);
+        //     console.log(downloadURL)
+        //   });
+        // }
+
+        await uploadTasks.map(uploadTask => {
+          console.log(uploadTask)
+          getDownloadURL(ref(storage, uploadTask.metadata.name)).then((downloadURL) => {
+            imageURLs.push(downloadURL);
+          });
+        })
+
         const docRef = await addDoc(collection(db, "properties"), {
           price,
           propertyArea,
@@ -179,9 +188,9 @@ export default function Home() {
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd"
+                                clipRule="evenodd"
                               ></path>
                             </svg>
                             <span className="sr-only">Close modal</span>
@@ -329,9 +338,9 @@ export default function Home() {
                                 xmlns="http://www.w3.org/2000/svg"
                               >
                                 <path
-                                  fill-rule="evenodd"
+                                  fillRule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                  clip-rule="evenodd"
+                                  clipRule="evenodd"
                                 ></path>
                               </svg>
                               Adicionar Imóvel
