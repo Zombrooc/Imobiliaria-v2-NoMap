@@ -4,17 +4,16 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, Suspense, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
+import { collection, addDoc } from "firebase/firestore";
 
 import Loading from "@/app/loading";
 import Navbar from "@/components/Navbar";
 import PropertyList from "@/components/PropertyList";
-import { auth, storage } from "../lib/firebase";
+import { auth, storage, db } from "../lib/firebase";
 // import Banner from "@/components/Banner";
 
 export default function Home() {
   const [createPropertyModal, setCreatePropertyModal] = useState(false);
-  const [downloadURLs, setDownloadURLs] = useState([]);
   // const [succededSignup, setSuccededSignup] = useState(true);
   const cancelButtonRef = useRef(null);
   const {
@@ -40,30 +39,20 @@ export default function Home() {
     isFavorite,
     propertyImages,
   }) => {
-    console.log(
-      price,
-      propertyArea,
-      rooms,
-      propertyDestination,
-      isFavorite,
-      propertyImages
-    );
 
-    let imgURLs = [];
     const promises = [];
     Array.from(propertyImages).map(async propertyImage => {
-      // Upload file and metadata to the object 'images/mountains.jpg'
+
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
       const uploadTask = uploadBytesResumable(storageRef, propertyImage);
 
-
-      // Listen for state changes, errors, and completion of the upload.
+      let imageURLs = [];
       promises.push(uploadTask);
       uploadTask.on('state_changed',
         (snapshot) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
+          // console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
             case 'paused':
               console.log('Upload is paused');
@@ -91,23 +80,34 @@ export default function Home() {
               break;
           }
         },
-        uploadTask.then(() => {
+        () => {
           // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setDownloadURLs([...downloadURLs, downloadURL]);
-
+            imageURLs.push(downloadURL);
+            console.log(downloadURL)
           });
-        }));
-
-
-
+        }
+      );
     })
 
     Promise.all(promises)
-      .then((result) => {
-        console.log("Beginning Upload...", result);
+      .then(async (result) => {
+        console.log(imageURLs)
+        console.log('Result' + result)
+        const docRef = await addDoc(collection(db, "properties"), {
+          price,
+          propertyArea,
+          rooms,
+          propertyDestination,
+          isFavorite,
+          imageURLs: [...imageURLs]
+        });
+
+        console.log("Document written with ID: ", docRef.id);
       })
       .catch(err => console.log(err.code))
+
+
   };
 
   return (
