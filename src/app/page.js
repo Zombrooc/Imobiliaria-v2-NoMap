@@ -45,76 +45,23 @@ export default function Home() {
     numberOfCars
   }) => {
 
-<<<<<<< HEAD
     [...propertyImages].map(async (propertyImage) => {
 
-=======
-    const promises = [];
-
-    Array.from(propertyImages).map(propertyImage => {
-      // Upload file and metadata to the object 'images/mountains.jpg'
->>>>>>> 215b6aa (asdasdasdasd)
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
       const uploadTask = uploadBytesResumable(storageRef, propertyImage)
 
-<<<<<<< HEAD
-=======
-      promises.push(uploadTask);
-
->>>>>>> 215b6aa (asdasdasdasd)
       uploadTask.on('state_changed',
         (snapshot) => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-          }
-<<<<<<< HEAD
+
+          uploadTask.then(d =>
+            getDownloadURL(storageRef)
+          ).then(url => setDownloadURLs([...downloadURLs, url]))
         }
       )
-=======
-        },
-        (error) => {
-          switch (error.code) {
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break;
-            case 'storage/canceled':
-              // User canceled the upload
-              break;
-
-            // ...
-
-            case 'storage/unknown':
-              // Unknown error occurred, inspect error.serverResponse
-              break;
-          }
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setDownloadURLs([...downloadURLs, downloadURL]);
-
-          });
-        });
-
-
->>>>>>> 215b6aa (asdasdasdasd)
-
-      uploadTask.then(snapshot => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          setDownloadURLs([...downloadURLs, downloadURL])
-        });
-      })
     })
 
-<<<<<<< HEAD
     const docRef = await addDoc(collection(db, "properties"), {
       price,
       propertyArea,
@@ -128,13 +75,6 @@ export default function Home() {
 
     console.log("Document written with ID: ", docRef.id);
     reset();
-=======
-    Promise.all(promises)
-      .then((tasks) => {
-        console.log("All uploads complete", tasks);
-      })
-      .catch(err => console.log(err.code))
->>>>>>> 215b6aa (asdasdasdasd)
   };
 
   return (
@@ -208,11 +148,7 @@ export default function Home() {
                               <path
                                 fillRule="evenodd"
                                 d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-<<<<<<< HEAD
                                 clipRule="evenodd"
-=======
-                                ClipRule="evenodd"
->>>>>>> 215b6aa (asdasdasdasd)
                               ></path>
                             </svg>
                             <span className="sr-only">Close modal</span>
@@ -411,11 +347,7 @@ export default function Home() {
                                 <path
                                   fillRule="evenodd"
                                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-<<<<<<< HEAD
                                   clipRule="evenodd"
-=======
-                                  ClipRule="evenodd"
->>>>>>> 215b6aa (asdasdasdasd)
                                 ></path>
                               </svg>
                               Adicionar Imóvel
