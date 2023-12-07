@@ -21,3 +21,8 @@ const storage = getStorage(app);
 // const analytics = getAnalytics(app);
 
 export { db, auth, storage };
+
+
+export const fileUpload = (file) => {
+
+}

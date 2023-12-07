@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-export default function PropertyItem({ img }) {
+export default function PropertyItem({ property }) {
   return (
     <>
       <div className="relative">
-        <span className="absolute top-2 right-2 inline-flex items-center justify-center w-7 h-7 font-semibold text-white bg-amber-400 rounded-full ">
+        {property.isFavorite && (<span className="absolute top-2 right-2 inline-flex items-center justify-center w-7 h-7 font-semibold text-white bg-amber-400 rounded-full ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -21,34 +21,36 @@ export default function PropertyItem({ img }) {
           </svg>
 
           <span className="sr-only">Star (Favorite Property)</span>
-        </span>
+        </span>)}
         <div className="w-52 rounded-xl shadow-md m-5 overflow-hidden">
-          <Image
-            src={img}
-            alt="Picture of the author"
-            className="w-72 mx-auto"
-            width={224}
-            height={140}
-          />
+          {property.imageURLs.lenght > 0 && (
+            <Image
+              src={imageURLs[0]}
+              alt="Picture of the author"
+              className="w-72 mx-auto"
+              width={224}
+              height={140}
+            />
+          )}
           <div className="p-3 text-xs font-medium text-gray-400">
             <div className=" flex content-justify pt-1">
               <div className="w-full">
-                <span> Quartos: 2 </span>
+                <span> Quartos: {property.rooms} </span>
               </div>
               <div className="w-full flex justify-end">
-                <span> Suítes: 2 </span>
+                <span> Suítes: {property.suites} </span>
               </div>
             </div>
             <div className=" flex content-justify pt-1">
               <div className="w-full">
-                <span> Garagem: Sim </span>
+                <span> Garagem: {property.garage} </span>
               </div>
               <div className="w-full flex justify-end">
-                <span> Para 2 carros </span>
+                <span> Para {property.numberOfCars} carros </span>
               </div>
             </div>
             <div className="pt-1">
-              <span> Área: 65m² </span>
+              <span> Área: {property.propertyArea} m² </span>
             </div>
           </div>
           <a

@@ -1,10 +1,11 @@
 "use client";
 
+import { Fragment, Suspense, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, Suspense, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 
 import Loading from "@/app/loading";
 import Navbar from "@/components/Navbar";
@@ -13,23 +14,25 @@ import { auth, storage, db } from "../lib/firebase";
 // import Banner from "@/components/Banner";
 
 export default function Home() {
+  const [user, setUser] = useState(null);
   const [createPropertyModal, setCreatePropertyModal] = useState(false);
-  // const [succededSignup, setSuccededSignup] = useState(true);
+  const [downloadURLs, setDownloadURLs] = useState([]);
   const cancelButtonRef = useRef(null);
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
-  // const searchParams = useSearchParams();
-
-  // useEffect(() => {
-  //   const search = searchParams.get("signup");
-
-  //   search === "success" ? setSuccededSignup(true) : setSuccededSignup(true);
-  // });
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(true);
+      }
+    });
+  }, [user]);
 
   const onSubmit = async ({
     price,
@@ -38,22 +41,20 @@ export default function Home() {
     propertyDestination,
     isFavorite,
     propertyImages,
+    hasGarage,
+    numberOfCars
   }) => {
 
-    const promises = [];
-    let imageURLs = [];
-
-    Array.from(propertyImages).map(async propertyImage => {
+    [...propertyImages].map(async (propertyImage) => {
 
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
-      const uploadTask = uploadBytesResumable(storageRef, propertyImage);
+      const uploadTask = uploadBytesResumable(storageRef, propertyImage)
 
-      promises.push(uploadTask);
       uploadTask.on('state_changed',
         (snapshot) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          // console.log('Upload is ' + progress + '% done');
+          console.log('Upload is ' + progress + '% done');
           switch (snapshot.state) {
             case 'paused':
               console.log('Upload is paused');
@@ -62,61 +63,31 @@ export default function Home() {
               console.log('Upload is running');
               break;
           }
-        },
-        (error) => {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          switch (error.code) {
-            case 'storage/unauthorized':
-              // User doesn't have permission to access the object
-              break;
-            case 'storage/canceled':
-              // User canceled the upload
-              break;
-
-            // ...
-
-            case 'storage/unknown':
-              // Unknown error occurred, inspect error.serverResponse
-              break;
-          }
         }
-      );
+      )
+
+      uploadTask.then(snapshot => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(snapshot.ref).then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          setDownloadURLs([...downloadURLs, downloadURL])
+        });
+      })
     })
 
-    Promise.all(promises)
-      .then(async (uploadTasks) => {
+    const docRef = await addDoc(collection(db, "properties"), {
+      price,
+      propertyArea,
+      rooms,
+      propertyDestination,
+      isFavorite,
+      hasGarage,
+      numberOfCars,
+      imageURLs: [...downloadURLs]
+    });
 
-
-        // () => {
-        //   // Upload completed successfully, now we can get the download URL
-        //   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        //     imageURLs.push(downloadURL);
-        //     console.log(downloadURL)
-        //   });
-        // }
-
-        await uploadTasks.map(uploadTask => {
-          console.log(uploadTask)
-          getDownloadURL(ref(storage, uploadTask.metadata.name)).then((downloadURL) => {
-            imageURLs.push(downloadURL);
-          });
-        })
-
-        const docRef = await addDoc(collection(db, "properties"), {
-          price,
-          propertyArea,
-          rooms,
-          propertyDestination,
-          isFavorite,
-          imageURLs: [...imageURLs]
-        });
-
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(err => console.log(err.code))
-
-
+    console.log("Document written with ID: ", docRef.id);
+    reset();
   };
 
   return (
@@ -238,6 +209,21 @@ export default function Home() {
                                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2"
                                   placeholder="2"
                                 />
+                                <label
+                                  htmlFor="suites"
+                                  className="block mb-2 text-sm font-medium text-gray-900 "
+                                >
+                                  Suites
+                                </label>
+                                <input
+                                  type="number"
+                                  {...register("suites", {
+                                    required:
+                                      "Digite a quantidade de suites do imóvel",
+                                  })}
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2"
+                                  placeholder="2"
+                                />
                               </div>
                               <div>
                                 <label
@@ -326,6 +312,40 @@ export default function Home() {
                                   </label>
                                 </div>
                               </div>
+                              <div>
+                                <div className="flex items-center">
+                                  <input
+                                    name="hasGarage"
+                                    type="checkbox"
+                                    {...register("hasGarage")}
+                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 "
+                                  />
+                                  <label
+                                    htmlFor="hasGarage"
+                                    className="ml-2 text-sm font-medium text-gray-900 "
+                                  >
+                                    Possui Garagem?
+                                  </label>
+                                </div>
+
+                                <div>
+                                  <label
+                                    htmlFor="price"
+                                    className="block mb-2 text-sm font-medium text-gray-900 "
+                                  >
+                                    Garagem para:
+                                  </label>
+                                  <input
+                                    type="number"
+                                    name="numberOfCars"
+                                    {...register("numberOfCars", {
+                                      required: "Digite a quantidade de carros que cabem na garagem",
+                                    })}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2.5 "
+                                    placeholder="5 carros"
+                                  />
+                                </div>
+                              </div>
                             </div>
                             <button
                               type="submit"
@@ -356,7 +376,7 @@ export default function Home() {
           </div>
         </Dialog>
       </Transition.Root>
-      <div
+      {user && (<div
         className="w-12 h-12 absolute right-3 bottom-3 shadow-md rounded-full bg-[--primary] flex justify-center items-center text-[--white]  p-2 cursor-pointer"
         onClick={() => setCreatePropertyModal(true)}
       >
@@ -368,7 +388,7 @@ export default function Home() {
         >
           <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
         </svg>
-      </div>
+      </div>)}
     </>
   );
 }
