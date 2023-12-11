@@ -4,7 +4,7 @@ import { Fragment, Suspense, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
 import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, where, doc, arrayUnion } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 import Loading from "@/app/loading";
@@ -45,23 +45,6 @@ export default function Home() {
     numberOfCars
   }) => {
 
-    [...propertyImages].map(async (propertyImage) => {
-
-      const storageRef = ref(storage, 'uploads/' + propertyImage.name);
-      const uploadTask = uploadBytesResumable(storageRef, propertyImage)
-
-      uploadTask.on('state_changed',
-        (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-
-          uploadTask.then(d =>
-            getDownloadURL(storageRef)
-          ).then(url => setDownloadURLs([...downloadURLs, url]))
-        }
-      )
-    })
-
     const docRef = await addDoc(collection(db, "properties"), {
       price,
       propertyArea,
@@ -70,11 +53,35 @@ export default function Home() {
       isFavorite,
       hasGarage,
       numberOfCars,
-      imageURLs: [...downloadURLs]
+
     });
 
     console.log("Document written with ID: ", docRef.id);
+
+    [...propertyImages].map((propertyImage) => {
+
+      const storageRef = ref(storage, 'uploads/' + propertyImage.name);
+      const uploadTask = uploadBytesResumable(storageRef, propertyImage).then(snapshot => {
+        console.log(snapshot)
+      })
+
+      // uploadTask.on('state_changed', (snapshot) => {
+      //   const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+      //   console.log('Upload is ' + progress + '% done');
+      // }, (error) => {
+      //   console.log(console.log(error))
+      // }, () => {
+      //   getDownloadURL(uploadTask.snapshot.ref).then(async url => {
+      //     await updateDoc(doc(db, 'properties', docRef.id), {
+      //       imageUrl: arrayUnion(url)
+      //     })
+      //   })
+      // })
+    })
+
     reset();
+
+
   };
 
   return (
