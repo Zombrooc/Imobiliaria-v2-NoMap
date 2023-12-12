@@ -23,15 +23,15 @@ export default function PropertyItem({ property }) {
           <span className="sr-only">Star (Favorite Property)</span>
         </span>)}
         <div className="w-52 rounded-xl shadow-md m-5 overflow-hidden">
-          {/* {property.imageUrls.lenght > 0 && (
+          {property.imageUrls.length > 0 && (
             <Image
-              src={imageURLs[0]}
+              src={property.imageUrls[0]}
               alt="Picture of the author"
               className="w-72 mx-auto"
               width={224}
               height={140}
             />
-          )} */}
+          )}
           <div className="p-3 text-xs font-medium text-gray-400">
             <div className=" flex content-justify pt-1">
               <div className="w-full">

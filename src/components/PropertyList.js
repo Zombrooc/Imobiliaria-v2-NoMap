@@ -16,11 +16,14 @@ export default function PropertyList() {
 
       const q = query(propertiesRef);
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        setProperties([...properties, { id: doc.id, ...doc.data() }])
+      querySnapshot.forEach(async (doc) => {
+        const propertyData = doc.data()
+        console.log(propertyData)
+        await setProperties([...properties, { id: doc.id, ...propertyData }])
       });
     }
-    fetchData()
+
+    fetchData(0)
   }, [])
 
   return (
@@ -33,7 +36,7 @@ export default function PropertyList() {
       <hr className="my-5" />
       <div className="w-full flex flex-wrap cont">
         {properties.map(property => {
-          return (<PropertyItem key={property.id} property={property} />)
+          return (<PropertyItem key={property.id + + Math.random()} property={property} />)
         })}
       </div>
     </div>
