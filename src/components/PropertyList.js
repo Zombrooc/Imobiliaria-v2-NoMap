@@ -10,20 +10,23 @@ export default function PropertyList() {
   const [properties, setProperties] = useState([])
 
   useEffect(() => {
+
     const fetchData = async () => {
 
       const propertiesRef = collection(db, "properties");
 
       const q = query(propertiesRef);
       const querySnapshot = await getDocs(q);
+
       querySnapshot.forEach(async (doc) => {
         const propertyData = doc.data()
-        console.log(propertyData)
-        await setProperties([...properties, { id: doc.id, ...propertyData }])
+
+        await setProperties([...properties, { id: doc.id, propertyData }])
       });
     }
 
-    fetchData(0)
+    fetchData()
+
   }, [])
 
   return (
