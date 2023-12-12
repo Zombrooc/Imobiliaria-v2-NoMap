@@ -61,25 +61,37 @@ export default function Home() {
 
     });
 
-    let downloadURLs = []
+    let uploadCounter = 0;
 
-    setIsLoadingMessage(`Enviando ${downloadURLs.length}/${[...propertyImages].length}`)
+    setIsLoadingMessage(`Enviando ${uploadCounter}/${[...propertyImages].length}`)
     await Promise.all([...propertyImages].map(async (propertyImage) => {
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
       uploadBytes(storageRef, propertyImage)
         .then((snapshot) => {
-          console.log("Uploaded a blob or file!");
+          uploadCounter++;
+          setIsLoadingMessage(`Enviando ${uploadCounter}/${[...propertyImages].length}`)
         })
         .then((resp) => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
-            downloadURLs.push(downloadURL);
-            setIsLoadingMessage(`Enviando ${downloadURLs.length}/${[...propertyImages].length}`)
+
             await updateDoc(doc(db, "properties", docRef.id), {
               imageUrls: arrayUnion(downloadURL),
             });
           });
+
+          if (uploadCounter === [...propertyImages].length) {
+            setCreatePropertyModal(false)
+            setisLoading(false)
+            setIsLoadingMessage(null)
+            reset()
+            uploadCounter = 0;
+          }
         });
     }))
+
+
+
+
 
   };
 
