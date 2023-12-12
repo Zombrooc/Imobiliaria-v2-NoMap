@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { db } from '@/lib/firebase';
@@ -10,6 +10,13 @@ export default function PropertyList() {
   const [properties, setProperties] = useState([])
 
   useEffect(() => {
+    onSnapshot(doc(db, "properties"), (doc) => {
+      const propertyData = doc.data()
+
+      console.log(doc)
+
+      await setProperties([...properties, { id: doc.id, propertyData }])
+    });
 
     const fetchData = async () => {
 
