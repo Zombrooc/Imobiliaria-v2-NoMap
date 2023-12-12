@@ -21,6 +21,8 @@ export default function PropertyList() {
       querySnapshot.forEach(async (doc) => {
         const propertyData = doc.data()
 
+        console.log(doc)
+
         await setProperties([...properties, { id: doc.id, propertyData }])
       });
     }
