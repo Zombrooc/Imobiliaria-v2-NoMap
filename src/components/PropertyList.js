@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, query, where, getDocs, onSnapshot, QuerySnapshot, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { db } from '@/lib/firebase';
@@ -10,13 +10,6 @@ export default function PropertyList() {
   const [properties, setProperties] = useState([])
 
   useEffect(() => {
-    onSnapshot(doc(db, "properties"), (doc) => {
-      const propertyData = doc.data()
-
-      console.log(doc)
-
-      await setProperties([...properties, { id: doc.id, propertyData }])
-    });
 
     const fetchData = async () => {
 
@@ -25,13 +18,15 @@ export default function PropertyList() {
       const q = query(propertiesRef);
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach(async (doc) => {
+      const preData = []
+
+      querySnapshot.forEach((doc) => {
         const propertyData = doc.data()
 
-        console.log(doc)
+        preData.push({ id: doc.id, ...propertyData })
 
-        await setProperties([...properties, { id: doc.id, propertyData }])
       });
+      setProperties([...preData])
     }
 
     fetchData()
@@ -47,9 +42,10 @@ export default function PropertyList() {
       </h1>
       <hr className="my-5" />
       <div className="w-full flex flex-wrap cont">
-        {properties.map(property => {
+        {properties.length > 0 && properties.map(property => {
+          console.log(property)
           return (<PropertyItem key={property.id + + Math.random()} property={property} />)
-        })}
+        }) || <h2> Nenhuma propriedade a ser exibida no momento.</h2>}
       </div>
     </div>
   );

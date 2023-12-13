@@ -63,13 +63,12 @@ export default function Home() {
 
     let uploadCounter = 0;
 
-    setIsLoadingMessage(`Enviando ${uploadCounter}/${[...propertyImages].length}`)
     await Promise.all([...propertyImages].map(async (propertyImage) => {
+      setIsLoadingMessage(`Enviando ${uploadCounter} de ${[...propertyImages].length} imagens.`)
       const storageRef = ref(storage, 'uploads/' + propertyImage.name);
       uploadBytes(storageRef, propertyImage)
         .then((snapshot) => {
           uploadCounter++;
-          setIsLoadingMessage(`Enviando ${uploadCounter}/${[...propertyImages].length}`)
         })
         .then((resp) => {
           getDownloadURL(storageRef).then(async (downloadURL) => {
@@ -86,13 +85,10 @@ export default function Home() {
             reset()
             uploadCounter = 0;
           }
+        }).catch(err => {
+          console.log(err)
         });
     }))
-
-
-
-
-
   };
 
   return (
@@ -202,12 +198,13 @@ export default function Home() {
                                 </div>
                                 <div>
                                   <label
-                                    htmlFor="name"
+                                    htmlFor="rooms"
                                     className="block mb-2 text-sm font-medium text-gray-900 "
                                   >
                                     Número de Quartos
                                   </label>
                                   <input
+                                    name="rooms"
                                     type="number"
                                     {...register("rooms", {
                                       required:
@@ -223,6 +220,7 @@ export default function Home() {
                                     Suites
                                   </label>
                                   <input
+                                    name="suites"
                                     type="number"
                                     {...register("suites", {
                                       required:
@@ -270,12 +268,13 @@ export default function Home() {
                                 </div>
                                 <div>
                                   <label
-                                    htmlFor="category"
+                                    htmlFor="propertyDestination"
                                     className="block mb-2 text-sm font-medium text-gray-900 "
                                   >
                                     Destino do imóvel
                                   </label>
                                   <select
+                                    name="propertyDestination"
                                     {...register("propertyDestination", {
                                       required:
                                         "Necessário escolher um destino para esse imóvel.",
@@ -323,7 +322,7 @@ export default function Home() {
 
                                   <div>
                                     <label
-                                      htmlFor="price"
+                                      htmlFor="numberOfCars"
                                       className="block mb-2 text-sm font-medium text-gray-900 "
                                     >
                                       Garagem para:
