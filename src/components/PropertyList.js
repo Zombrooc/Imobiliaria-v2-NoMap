@@ -5,33 +5,33 @@ import { db } from '@/lib/firebase';
 
 import PropertyItem from "@/components/PropertyItem";
 
-export default function PropertyList() {
+async function getData() {
+  const propertiesRef = collection(db, "properties");
+
+  const q = query(propertiesRef);
+  const querySnapshot = await getDocs(q);
+
+  const preData = []
+
+  querySnapshot.forEach((doc) => {
+    const propertyData = doc.data()
+
+    preData.push({ id: doc.id, ...propertyData })
+
+  });
+
+  return preData
+}
+
+
+export default async function PropertyList() {
+
 
   const [properties, setProperties] = useState([])
 
-  useEffect(() => {
-
-    const fetchData = async () => {
-
-      const propertiesRef = collection(db, "properties");
-
-      const q = query(propertiesRef);
-      const querySnapshot = await getDocs(q);
-
-      const preData = []
-
-      querySnapshot.forEach((doc) => {
-        const propertyData = doc.data()
-
-        preData.push({ id: doc.id, ...propertyData })
-
-      });
-      setProperties([...preData])
-    }
-
-    fetchData()
-
-  }, [])
+  getData().then(async (data) => {
+    await setProperties([...data])
+  })
 
   return (
 
