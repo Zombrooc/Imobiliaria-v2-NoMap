@@ -32,6 +32,11 @@ const nextConfig = {
         hostname: "firebasestorage.googleapis.com",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "tailwindui.com",
+        pathname: "**",
+      }
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",

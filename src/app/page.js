@@ -1,18 +1,16 @@
 "use client";
 
-import { Fragment, Suspense, useRef, useState, useEffect } from "react";
+import { Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { useForm } from "react-hook-form";
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable } from "firebase/storage";
-import { collection, addDoc, updateDoc, where, doc, arrayUnion } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc, updateDoc, doc, arrayUnion } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-import Loading from "@/app/loading";
 import Navbar from "@/components/Navbar";
 import PropertyList from "@/components/PropertyList";
-import { auth, storage, db, STATE_CHANGED } from "../lib/firebase";
+import { auth, storage, db } from "../lib/firebase";
 import LoadingSpinner from "@/components/Loading_Spinner";
-// import Banner from "@/components/Banner";
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -58,7 +56,6 @@ export default function Home() {
       isFavorite,
       hasGarage,
       numberOfCars,
-
     });
 
     let uploadCounter = 0;
@@ -89,8 +86,7 @@ export default function Home() {
           console.log(err)
         });
     }))
-  };
-
+  }
   return (
     <>
       <Navbar />
@@ -103,9 +99,7 @@ export default function Home() {
         </Banner>
       )} */}
       <main className="w-full p-6">
-        <Suspense fallback={<Loading />}>
-          <PropertyList />
-        </Suspense>
+        <PropertyList />
       </main>
       <Transition.Root show={createPropertyModal} as={Fragment}>
         <Dialog
@@ -330,9 +324,7 @@ export default function Home() {
                                     <input
                                       type="number"
                                       name="numberOfCars"
-                                      {...register("numberOfCars", {
-                                        required: "Digite a quantidade de carros que cabem na garagem",
-                                      })}
+                                      {...register("numberOfCars")}
                                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[--primary] focus:border-[--primary] block w-full p-2.5 "
                                       placeholder="5 carros"
                                     />

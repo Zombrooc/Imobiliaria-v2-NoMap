@@ -1,37 +1,22 @@
-import { collection, query, where, getDocs, onSnapshot, QuerySnapshot, doc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-
-import { db } from '@/lib/firebase';
-
 import PropertyItem from "@/components/PropertyItem";
 
-async function getData() {
-  const propertiesRef = collection(db, "properties");
+const URL = process.env.NEXT_PUBLIC_VERCEL_URL;
 
-  const q = query(propertiesRef);
-  const querySnapshot = await getDocs(q);
+async function getProperties() {
 
-  const preData = []
+  const res = await fetch(`${URL}/properties/api`);
 
-  querySnapshot.forEach((doc) => {
-    const propertyData = doc.data()
+  if (!res.ok) {
+    // This will activate the closest `error.js` Error Boundary
+    throw new Error('Failed to fetch data')
+  }
 
-    preData.push({ id: doc.id, ...propertyData })
-
-  });
-
-  return preData
+  return res.json()
 }
-
 
 export default async function PropertyList() {
 
-
-  const [properties, setProperties] = useState([])
-
-  getData().then(async (data) => {
-    await setProperties([...data])
-  })
+  const { properties } = await getProperties()
 
   return (
 
@@ -43,7 +28,6 @@ export default async function PropertyList() {
       <hr className="my-5" />
       <div className="w-full flex flex-wrap cont">
         {properties.length > 0 && properties.map(property => {
-          console.log(property)
           return (<PropertyItem key={property.id + + Math.random()} property={property} />)
         }) || <h2> Nenhuma propriedade a ser exibida no momento.</h2>}
       </div>
