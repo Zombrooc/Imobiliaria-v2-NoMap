@@ -18,6 +18,7 @@ export default async function PropertyList() {
 
   const { properties } = await getProperties()
 
+
   return (
 
     <div className=" rounded-xl shadow-md p-8 bg-slate-100">
