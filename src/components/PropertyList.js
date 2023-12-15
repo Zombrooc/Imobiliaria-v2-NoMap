@@ -1,10 +1,10 @@
 import PropertyItem from "@/components/PropertyItem";
 
-const URL = process.env.NEXT_PUBLIC_VERCEL_URL;
+const URL = process.env.NEXT_PUBLIC_SITEURL;
 
 async function getProperties() {
 
-  const res = await fetch(`${URL}/properties/api`);
+  const res = await fetch(`${URL}/properties/api`, { method: 'GET' });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
