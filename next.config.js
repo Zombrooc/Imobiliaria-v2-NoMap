@@ -4,33 +4,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "tailwindui.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "i.pinimg.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "mondonex.com.br",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
-        hostname: "**.amazonaws.com",
-        pathname: "**",
-      },
-      {
-        protocol: "https",
         hostname: "firebasestorage.googleapis.com",
-        pathname: "**",
+        pathname: "/v0/b/imobiliaria-a102f.appspot.com/o/**",
       },
       {
         protocol: "https",
@@ -40,7 +15,7 @@ const nextConfig = {
     ],
     dangerouslyAllowSVG: true,
     contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 

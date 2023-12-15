@@ -2,22 +2,22 @@ import PropertyItem from "@/components/PropertyItem";
 
 const URL = process.env.NEXT_PUBLIC_SITEURL;
 
-async function getProperties() {
+async function getData() {
+  const res = await fetch(`${URL}/properties/api/getProperties`, {
+    method: 'GET',
+    next: {
+      revalidate: 600
+    }
+  })
 
-  const res = await fetch(`${URL}/properties/api/getProperties`, { method: 'GET', next: { revalidate: 300 } });
+  const { properties } = await res.json()
 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data')
-  }
-
-  return res.json()
+  return properties
 }
 
 export default async function PropertyList() {
 
-  const { properties } = await getProperties()
-
+  const properties = await getData();
 
   return (
 
@@ -28,7 +28,7 @@ export default async function PropertyList() {
       </h1>
       <hr className="my-5" />
       <div className="w-full flex flex-wrap cont">
-        {properties.length > 0 && properties.map(property => {
+        {properties.length >= 0 && properties.map(property => {
           return (<PropertyItem key={property.id + + Math.random()} property={property} />)
         }) || <h2> Nenhuma propriedade a ser exibida no momento.</h2>}
       </div>

@@ -28,7 +28,7 @@ export default function Navbar() {
 
   const [user, setUser] = useState(null);
   const [navigation, setNavigation] = useState([
-    { name: "Ínicio", href: "#", current: true },
+    { name: "Ínicio", href: "/", current: true },
     { name: "Comprar", href: "#", current: false },
     { name: "Vender", href: "#", current: false },
     { name: "Alugar", href: "#", current: false },
@@ -84,6 +84,7 @@ export default function Navbar() {
                       src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                       alt="Your Company"
                       fill
+                      sizes="10vw"
                     />
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
@@ -119,7 +120,7 @@ export default function Navbar() {
                             <BellIcon className="h-6 w-6" aria-hidden="true" />
                           </Menu.Button>
                         </div>
-                        <Transition
+                        {/* <Transition
                           as={Fragment}
                           enter="transition ease-out duration-100"
                           enterFrom="transform opacity-0 scale-95"
@@ -142,7 +143,7 @@ export default function Navbar() {
                                     <Image
                                       className="w-11 h-11 rounded-full"
                                       src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                                      alt="Bonnie Green avatar"
+                                      alt="User Profile Pic"
                                       width={44}
                                       height={44}
                                     />
@@ -198,7 +199,7 @@ export default function Navbar() {
                               </div>
                             </a>
                           </Menu.Items>
-                        </Transition>
+                        </Transition> */}
                       </Menu>
 
                       {/* Profile dropdown */}

@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function PropertyItem({ property }) {
+
   return (
-    <>
-      <div className="relative">
-        {property.isFavorite && (<span className="absolute top-2 right-2 inline-flex items-center justify-center w-7 h-7 font-semibold text-white bg-amber-400 rounded-full ">
+    <div className="relative">
+      {property.isFavorite && (
+        <span className="absolute top-2 right-2 inline-flex items-center justify-center w-7 h-7 font-semibold text-white bg-amber-400 rounded-full ">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -21,49 +22,49 @@ export default function PropertyItem({ property }) {
             />
           </svg>
 
-          <span className="sr-only">Star (Favorite Property)</span>
-        </span>)}
-        <div className="w-52 rounded-xl shadow-md m-5 overflow-hidden">
-          {property.imageUrls.length > 0 && (
-            <Image
-              src={property.imageUrls[0]}
-              alt="Picture of the author"
-              className="w-72 mx-auto"
-              width={224}
-              height={140}
-            />
-          )}
-          <div className="p-3 text-xs font-medium text-gray-400">
-            <div className=" flex content-justify pt-1">
-              <div className="w-full">
-                <span> Quartos: {property.rooms} </span>
-              </div>
-              <div className="w-full flex justify-end">
-                <span> Suítes: {property.suites} </span>
-              </div>
+          <span className="sr-only">Estrela (Propriedade mais procurada)</span>
+        </span>
+      )}
+      <div className="w-52 rounded-xl shadow-md m-5 overflow-hidden">
+        {property.imageUrls.length > 0 && (
+          <Image
+            src={property.imageUrls[0]}
+            alt="Imagem da propriedade"
+            className="w-72 mx-auto"
+            width={224}
+            height={140}
+          />
+        )}
+        <div className="p-3 text-xs font-medium text-gray-400">
+          <div className=" flex content-justify pt-1">
+            <div className="w-full">
+              <span> Quartos: {property.rooms} </span>
             </div>
-            <div className=" flex content-justify pt-1">
-              <div className="w-full">
-                <span> Garagem: {property.garage} </span>
-              </div>
-              <div className="w-full flex justify-end">
-                <span> Para {property.numberOfCars} carros </span>
-              </div>
-            </div>
-            <div className="pt-1">
-              <span> Área: {property.propertyArea} m² </span>
+            <div className="w-full flex justify-end">
+              <span> Suítes: {property.suites} </span>
             </div>
           </div>
-          <Link
-            type="button"
-            className="w-full p-3 text-center text-lg font-medium bg-[--primary] text-neutral-200 cursor-pointer"
-            href={`properties/${property.id}`}
-          >
-            {" "}
-            Saiba mais
-          </Link>
+          <div className=" flex content-justify pt-1">
+            <div className="w-full">
+              <span> Garagem: {property.garage} </span>
+            </div>
+            <div className="w-full flex justify-end">
+              <span> Para {property.numberOfCars} carros </span>
+            </div>
+          </div>
+          <div className="pt-1">
+            <span> Área: {property.propertyArea} m² </span>
+          </div>
         </div>
+        <Link
+          type="button"
+          className="w-full p-3 text-center text-lg font-medium bg-[--primary] text-neutral-200 cursor-pointer"
+          href={`/properties/${property.id}`}
+        >
+          {" "}
+          Saiba mais
+        </Link>
       </div>
-    </>
+    </div>
   );
 }

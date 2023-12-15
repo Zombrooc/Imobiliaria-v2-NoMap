@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,7 +18,7 @@ export default function Signin() {
     formState: { errors },
   } = useForm();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         router.push("/");
@@ -40,8 +40,6 @@ export default function Signin() {
         const errorMessage = error.message;
 
         alert(errorCode, errorMessage);
-
-        // ..
       });
   };
 
