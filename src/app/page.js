@@ -32,6 +32,8 @@ export default function Home() {
         setUser(true);
       }
     });
+
+    setIsLoading(false)
   }, [user]);
 
   const onSubmit = async ({

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function PropertyItem({ property }) {
   return (
@@ -53,13 +54,14 @@ export default function PropertyItem({ property }) {
               <span> Área: {property.propertyArea} m² </span>
             </div>
           </div>
-          <a
+          <Link
             type="button"
             className="w-full p-3 text-center text-lg font-medium bg-[--primary] text-neutral-200 cursor-pointer"
+            href={`properties/${property.id}`}
           >
             {" "}
             Saiba mais
-          </a>
+          </Link>
         </div>
       </div>
     </>
