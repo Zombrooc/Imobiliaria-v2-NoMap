@@ -367,7 +367,7 @@ export default function Home() {
         </Dialog>
       </Transition.Root>
       {user && (<div
-        className="w-12 h-12 sticky right-3 bottom-3 shadow-md rounded-full bg-[--primary] flex justify-center items-center text-[--white]  p-2 cursor-pointer"
+        className="w-12 h-12 absolute right-3 bottom-3 shadow-md rounded-full bg-[--primary] flex justify-center items-center text-[--white]  p-2 cursor-pointer"
         onClick={() => setCreatePropertyModal(true)}
       >
         <svg

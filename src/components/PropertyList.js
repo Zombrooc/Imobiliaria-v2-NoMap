@@ -4,7 +4,7 @@ const URL = process.env.NEXT_PUBLIC_SITEURL;
 
 async function getProperties() {
 
-  const res = await fetch(`${URL}/properties/api/getProperties`, { method: 'GET' });
+  const res = await fetch(`${URL}/properties/api/getProperties`, { method: 'GET', next: { revalidate: 300 } });
 
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
